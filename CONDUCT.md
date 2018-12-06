@@ -1,4 +1,4 @@
-Aderisco volentieri al [The Code Manifesto](http://codemanifesto.com)
+Aderisco volentieri a [The Code Manifesto](http://codemanifesto.com)
 
 # Il Code Manifesto #
 
