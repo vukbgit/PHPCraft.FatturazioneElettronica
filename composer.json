@@ -5,7 +5,10 @@
     "license": "MIT",
     "authors": [
 	{
-            "name": "vuk"
+            "name": "vuk",
+            "email": "info@vuk.bg.it",
+            "homepage": "https://vuk.bg.it",
+            "role": "Developer"
 	}
     ],
     "require": {
@@ -15,7 +18,7 @@
     },
     "autoload": {
         "psr-4" : {
-            "PHPCraft\\Subject\\" : "src/"
+            "PHPCraft\\FatturazioneElettronica\\" : "src/"
         }
     }
 }

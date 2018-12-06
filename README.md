@@ -1,1 +1,1 @@
-Libreria per interfacciarsi al Sistema di Interscamio Italiano al fine di gestire la fatturazione elettronica
+Libreria per interfacciarsi al Sistema di Interscambio Italiano al fine di gestire la fatturazione elettronica
