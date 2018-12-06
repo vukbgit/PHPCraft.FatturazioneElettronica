@@ -1,5 +1,7 @@
-NOTA: la libreria è in corso di sviluppo e non ancora utilizzabile al momento
-NOTA: per interfacciarsi realmente a SdI è necesario essere un [soggetto accreditato](https://sdi.fatturapa.gov.it/SdI2FatturaPAWeb/AccediAlServizioAction.do?pagina=accreditamento_canale)
+__NOTA__: la libreria è in corso di sviluppo e non ancora utilizzabile al momento
+
+__NOTA__: per interfacciarsi realmente a SdI è necesario essere un [soggetto accreditato](https://sdi.fatturapa.gov.it/SdI2FatturaPAWeb/AccediAlServizioAction.do?pagina=accreditamento_canale)
+
 Libreria per interfacciarsi al Sistema di Interscambio Italiano al fine di gestire la fatturazione elettronica.
 
 ## webservice ##
