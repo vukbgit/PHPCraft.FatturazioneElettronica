@@ -1,0 +1,21 @@
+{
+    "name": "phpcraft/fatturazione-elettronica",
+    "type": "library",
+    "description": "interfaccia di connessione al Sistema di Interscambio per la gestione della fatturazione elettronica Italiana",
+    "license": "MIT",
+    "authors": [
+	{
+            "name": "vuk"
+	}
+    ],
+    "require": {
+        "zendframework/zend-soap": "^2.7"
+    },
+    "suggest": {
+    },
+    "autoload": {
+        "psr-4" : {
+            "PHPCraft\\Subject\\" : "src/"
+        }
+    }
+}
