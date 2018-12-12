@@ -13,14 +13,4 @@ class RicezioneFatture extends \PHPCraft\FatturazioneElettronica\ServerSOAP
     * Nome del file wsdl (senza estensione .wsdl)
     **/
     protected $nomeWsdl = 'RicezioneFatture_v1.0';
-
-    /**
-     * Costruttore
-     * @param array $opzioniSOAP
-     */
-    public function __constructxxx($opzioniSOAP = null)
-    {
-        parent::__construct($opzioniSOAP);
-
-    }
 }

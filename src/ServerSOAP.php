@@ -6,36 +6,17 @@
 
 namespace PHPCraft\FatturazioneElettronica;
 
-class ServerSOAP
+abstract class ServerSOAP extends \PHPCraft\FatturazioneElettronica\AgenteSOAP
 {
     /**
     * L'istanza di Zend\Soap\Server
     **/
-    private $serverSOAP;
+    private $serverSOAP = null;
 
     /**
-    * L'istanza di Zend\Soap\Server
+    * L'istanza della classe che espone i metodi corrispondenti alle operazioni a cui verranno passati gli input delle chiamate
     **/
-    private $opzioniSOAP;
-
-    /**
-    * Percorso dalla root del sito alla cartella che contiene i file wsdl e xsd che descriviono i webservice
-    **/
-    protected $percorsoWsdl = __DIR__ . '/../wsdl';
-
-    /**
-    * Nome del file wsdl, impostato nella classe derivata (senza estensione .wsdl)
-    **/
-    protected $nomeWsdl = null;
-
-    /**
-     * Costruttore
-     * @param array $opzioniSOAP
-     */
-    public function __construct($opzioniSOAP = null)
-    {
-        $this->opzioniSOAP = $opzioniSOAP;
-    }
+    protected $istanzaGestoreWebservice = null;
 
     /**
     * Inietta l'istanza di Zend SOAP server
@@ -45,40 +26,25 @@ class ServerSOAP
     {
         $this->serverSOAP = $serverSOAP;
         //imposta le opzioni SOAP
-        $this->serverSOAP->setOptions($this->opzioniSOAP);
-        //bind l'istanza della classe al SOAP server Zend
-        $this->serverSOAP->setObject($this);
+        if($this->opzioniSOAP) {
+            $this->serverSOAP->setOptions($this->opzioniSOAP);
+        }
     }
 
     /**
-     * Imposta il percorso ai file wsdl e xsd dalla root del sito nel caso in cui non si utilizzino quelli forniti dalla libreria alll'interno della cartella wsdl
-     * @param string $percorsoWsdl
-     */
-    public function setPercorsoWsdl($percorsoWsdl)
-    {
-        $this->percorsoWsdl = $percorsoWsdl;
-    }
-
-    /**
-     * Imposta il nome del file wsdl che descrive il webservice nel caso in cui non si utilizzino quelli forniti dalla libreria alll'interno della cartella wsdl
-     * @param string $nomeWsdl
-     */
-    public function setNomeWsdl($nomeWsdl)
-    {
-        $this->nomeWsdl = $nomeWsdl;
-    }
-
-    /**
-    * Builds path to a wsdl
-    * @param object $webservice webservice name
+    * Inietta l'istanza della classe che espone i metodi corrispondenti alle operazioni a cui verranno passati gli input delle chiamate
+    * @param object $istanzaGestoreWebservice
     **/
-    private function buildPercorsoWsdl()
+    public function injectIstanzaGestoreWebservice($istanzaGestoreWebservice)
     {
-        return sprintf(
-            '%s/%s.wsdl',
-            $this->percorsoWsdl,
-            $this->nomeWsdl
-        );
+        $NSClasse = explode('\\', get_class($this));
+        $webservice = array_pop($NSClasse);
+        $interface = sprintf('PHPCraft\FatturazioneElettronica\ServerSOAP\InterfacceWebservice\%s', $webservice);
+        //verifica che implementi l'interfaccia appropriata per il webservice in ascolto
+        if(!($istanzaGestoreWebservice instanceof $interface)) {
+            throw new \Exception(sprintf('Il gestore del webservice deve implementare l\'interfaccia \%s', $interface));
+        }
+        $this->istanzaGestoreWebservice = $istanzaGestoreWebservice;
     }
 
     /**
@@ -86,8 +52,20 @@ class ServerSOAP
      */
     public function listen()
     {
+        //verifica che sia stato iniettato il SOAP Server Zend
+        if(!$this->serverSOAP) {
+            throw new \Exception('Iniettare un\'istanza di \Zend\Soap\Server tramite il metodo injectServerSOAP');
+        }
+        //verifica che sia stata iniettatal'istanza del gestore del webservice
+        if(!$this->istanzaGestoreWebservice) {
+            throw new \Exception('Iniettare un\'istanza del gestore del webservice tramite il metodo injectIstanzaGestoreWebservice');
+        }
         //set wsdl
         $this->serverSOAP->setWsdl($this->buildPercorsoWsdl());
+        //$this->serverSOAP->setDebugMode(true);
+        //bind l'istanza del gestore al SOAP server Zend
+        $this->serverSOAP->setObject($this->istanzaGestoreWebservice);
+        //resta in ascolto
         $this->serverSOAP->handle();
     }
 }

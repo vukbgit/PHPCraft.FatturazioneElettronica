@@ -1,7 +1,6 @@
 <?php
 /**
- * Crea il SOAP server RicezioneFatture che "esposto dal destinatario, si occupa della ricezione dei
- * file fattura inviati dal SdI, tenendo conto dei diversi formati di trasmissione (FPR12, FPA12, FSM10) ;" (dalla documentazione ufficiale SdI)
+ * Crea il SOAP server SdIRiceviNotifica che " esposto dal SdI per i soli file fatturaPA, si occupa di ricevere la notifica di esito committente e di restituire l’eventuale scarto esito committente." (dalla documentazione ufficiale SdI)
  * @author vuk <http://vuk.bg.it>
  */
 
