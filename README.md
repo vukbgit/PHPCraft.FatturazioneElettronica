@@ -50,64 +50,70 @@ La libreria contiene anche le classi necessarie a generare e fare il parsing del
 
 ### creazione webservice ###
 
-PEr ogni webservice che si vuole esporre è necessario utilizzare una classe che implementi l'interfaccia corrispondente al webservice fra quelle contenute in \PHPCraft\FatturazioneElettronica\ServerSOAP\InterfacceWebservice e che quindi esponga tutti i metodi corrispondenti alle varie operazioni del webservice, per esempio:
+Per ogni webservice che si vuole esporre è necessario utilizzare una classe che implementi l'interfaccia corrispondente al webservice fra quelle contenute in \PHPCraft\FatturazioneElettronica\ServerSOAP\InterfacceWebservice e che quindi esponga tutti i metodi corrispondenti alle varie operazioni del webservice, per esempio:
 
     class MiaClassePerWebserviceRicezioneFatture implements \PHPCraft\FatturazioneElettronica\ServerSOAP\InterfacceWebservice\RicezioneFatture
     {
         public function RiceviFatture($fileSdIConMetadati)
         {
-            //eseguo le operazioni necessarie per l'operazione RiceviFatture
+            //eseguire le operazioni necessarie per l'operazione RiceviFatture
             ....
-            //Ritorno l'oggetto corretto per la risposta
+            //ritornare l'oggetto corretto per la risposta
             return new \PHPCraft\FatturazioneElettronica\TipiDati\RispostaRiceviFatture('ER01');
         }
 
         public function NotificaDecorrenzaTermini($fileSdI)
         {
-            //eseguo le operazioni necessarie per l'operazione NotificaDecorrenzaTermini
+            //eseguire le operazioni necessarie per l'operazione NotificaDecorrenzaTermini
             ...
-            //Ritorno nullo per questa operazione
+            //ritornare nullo per questa operazione
             return null;
         }
     }
 
-Posso quindi creare l'istanza del webservice:
+È quindi possibile creare l'istanza del webservice:
 
+    //disabilitare la cache wsdl se si stanno utilizzando dei wsdl non ancora definitivi
+    ini_set("soap.wsdl_cache_enabled", "0");
     //istanziare SOAP server Zend, il wsdl e le opzioni SOAP vengono impostate successivamente
     $zendSOAPServer = new Zend\Soap\Server;
     //istanziare la classe appropriata al server SOAP che si intende esporre fra RicezioneFatture, TrasmissioneFatture, SdIRiceviFile e SdIRiceviNotifica, per esempio RicezioneFatture
     $server = new \PHPCraft\FatturazioneElettronica\ServerSOAP\RicezioneFatture(
         $opzioniSOAP    //array di opzioni SOAP come accettate dal SOAP server Zend
     );
-    //inietta l'istanza del SOAP server Zend
+    //iniettare l'istanza del SOAP server Zend
     $server->injectServerSOAP($zendSOAPServer);
-    //inietta l'istanze della classe che gestisce le operazioni del webservice
+    //iniettare l'istanze della classe che gestisce le operazioni del webservice
     $miaClassePerWebserviceRicezioneFatture = new MiaClassePerWebserviceRicezioneFatture;
     $server->injectIstanzaGestoreWebservice($miaClassePerWebserviceRicezioneFatture);
-    //poni il server SOAP in ascolto
+    //porre il server SOAP in ascolto
     $server->listen();
 
 ### chiamata operazioni tramite client ###
 
-    //istanzia il SOAP client Zend
+    //disabilitare la cache wsdl se si stanno utilizzando dei wsdl non ancora definitivi
+    ini_set("soap.wsdl_cache_enabled", "0");
+    //istanziare il client SOAP Zend
     $zendSOAPClient = new Zend\Soap\Client;
-    //istanzia SOAP client PHPCraft in base al webservice da chiamare, per esempio RicezioneFatture
+    //istanziare il client SOAP PHPCraft in base al webservice da chiamare, per esempio RicezioneFatture
     $client = new $\PHPCraft\FatturazioneElettronica\ClientSOAP\RicezioneFatture();
     //inietta il SOAP client Zend
     $client->injectClientSOAP($zendSOAPClient);
-    //prepara i parametri da utilizzare con l'operazione del webservice che si desidera chiamare, per esempio RiceviFatture
-    $fileFattura = base64_encode(file_get_contents('percorso/ad/una/fattura.xml'));
-    $fileMetadati = base64_encode(file_get_contents('percorso/ad/un/file/metadati.xml'));
-    $fileSdIConMetadati = [
-        'IdentificativoSdI' => '123456',
-        'NomeFile' => 'nome-del-file-fattura',
-        'File' => $fileFattura,
-        'NomeFileMetadati' => 'nome-del-file-metadati',
-        'Metadati' => $fileMetadati
-    ];
-    //la classe utilizza i wsdl forniti dal Ministero che contengono l'endpoint su fatturapa.it, se ci si vuole connettere ad un diverso endpoint (per esmpio ai fini di test) bisogna spcificare la location
-    $client->setLocation('https://fatturazione-elettronica.miodominio.it/RicezioneFatture');
-    //si chiama il metodo del client che ha lo stesso nome dell'operazione che si intende chiamare
+    //impostare location SE diversa da quella ufficiale contenuta nei wsdl, per esempio se si stanno testando i webservice sul proprio dominio
+    $client->setLocation('https://fatturazione-elettronica.mio.dominio/nome-webservice');
+
+
+    //preparare i parametri in input a seconda dell'operazione del webservice che si desidera chiamare, verificandoli nelle interfacce disponibili in \PHPCraft\FatturazioneElettronica\ServerSOAP\InterfacceWebservice, per esempio per RicezioneFatture -> RiceviFatture
+    $fileFattura = base64_encode(file_get_contents('percorso/alla/fattura.xml'));
+    $fileMetadati = base64_encode(file_get_contents('percorso/al/file/metadati.xml'));
+    $fileSdIConMetadati = new \PHPCraft\FatturazioneElettronica\TipiDati\FileSdIConMetadati(
+        123,    //identificatiovo bumerico file
+        'nome del file',
+        $fileFattura,
+        'nome del file metadati',
+        $fileMetadati
+    );
+    //la classe del client espone i metodi con i nomi delle operazioni (in questo caso RiceviFatture)
     $return = $client->RiceviFatture($fileSdIConMetadati);
 
 [Documentazione SdI](https://www.fatturapa.gov.it/export/fatturazione/it/normativa/f-3.htm)
