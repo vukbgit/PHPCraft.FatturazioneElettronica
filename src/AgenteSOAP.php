@@ -11,7 +11,7 @@ abstract class AgenteSOAP
     /**
     * L'istanza di Zend\Soap\Server
     **/
-    protected $opzioniSOAP;
+    protected $opzioniSOAP = [];
 
     /**
     * Percorso dalla root del sito alla cartella che contiene i file wsdl e xsd che descriviono i webservice

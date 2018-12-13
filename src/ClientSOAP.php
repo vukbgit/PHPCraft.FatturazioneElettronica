@@ -6,7 +6,7 @@
 
 namespace PHPCraft\FatturazioneElettronica;
 
-abstract class ClientSOAP extends \PHPCraft\FatturazioneElettronica\AgenteSOAP
+abstract class ClientSOAP extends AgenteSOAP
 {
     /**
     * L'istanza di Zend\Soap\Client
@@ -17,7 +17,7 @@ abstract class ClientSOAP extends \PHPCraft\FatturazioneElettronica\AgenteSOAP
     * Inietta l'istanza di Zend SOAP client
     * @param \Zend\Soap\Client $clientSOAP
     **/
-    public function injectClientSOAP(\Zend\Soap\Client $clientSOAP)
+    /*public function injectClientSOAP(\Zend\Soap\Client $clientSOAP)
     {
         $this->clientSOAP = $clientSOAP;
         //imposta le opzioni SOAP
@@ -26,6 +26,17 @@ abstract class ClientSOAP extends \PHPCraft\FatturazioneElettronica\AgenteSOAP
         }
         //set wsdl
         $this->clientSOAP->setWsdl($this->buildPercorsoWsdl());
+    }*/
+
+    /**
+    * Imposta l'istanza di SoapClient PHP
+    **/
+    public function initClientSOAP()
+    {
+        $this->clientSOAP = new \SoapClient(
+            $this->buildPercorsoWsdl(),
+            $this->opzioniSOAP
+        );
     }
 
     /**
@@ -34,7 +45,7 @@ abstract class ClientSOAP extends \PHPCraft\FatturazioneElettronica\AgenteSOAP
     **/
     public function setLocation($urlWebService)
     {
-        $this->clientSOAP->setLocation($urlWebService);
+        $this->clientSOAP->__setLocation($urlWebService);
     }
 
     /**
@@ -51,6 +62,7 @@ abstract class ClientSOAP extends \PHPCraft\FatturazioneElettronica\AgenteSOAP
      */
     public function __call($operazione, $argomenti)
     {
+        //~r($this->clientSOAP->getOptions());
         //verifica correttezza degli argomenti
         $this->verificaArgomenti($operazione, $argomenti);
         //chiama operazione
