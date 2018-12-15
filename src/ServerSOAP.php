@@ -6,8 +6,10 @@
 
 namespace PHPCraft\FatturazioneElettronica;
 
-abstract class ServerSOAP extends \PHPCraft\FatturazioneElettronica\AgenteSOAP
+abstract class ServerSOAP
 {
+     use AgenteSOAP;
+
     /**
     * L'istanza di Zend\Soap\Server
     **/
@@ -17,6 +19,15 @@ abstract class ServerSOAP extends \PHPCraft\FatturazioneElettronica\AgenteSOAP
     * L'istanza della classe che espone i metodi corrispondenti alle operazioni a cui verranno passati gli input delle chiamate
     **/
     protected $istanzaGestoreWebservice = null;
+
+    /**
+     * Costruttore
+     * @param array $opzioniSOAP
+     */
+    public function __construct($opzioniSOAP = null)
+    {
+        $this->opzioniSOAP = $opzioniSOAP;
+    }
 
     /**
     * Inietta l'istanza di Zend SOAP server

@@ -14,6 +14,15 @@ class SdIRiceviNotifica extends \PHPCraft\FatturazioneElettronica\ClientSOAP
     protected $nomeWsdl = 'SdIRiceviNotifica_v1.0';
 
     /**
+    * Location di test e produzione
+    **/
+    protected $locations = [
+        'test' => ' https://testservizi.fatturapa.it/ricevi_notifica
+',
+        'produzione' => 'https://servizi.fatturapa.it/ricevi_notifica'
+    ];
+
+    /**
      * Verifica la correttezza degli argomenti passati con la chiamata all'operazione
      * @param string $operazione
      * @param array $argomenti

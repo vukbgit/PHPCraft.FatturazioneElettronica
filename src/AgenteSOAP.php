@@ -6,7 +6,7 @@
 
 namespace PHPCraft\FatturazioneElettronica;
 
-abstract class AgenteSOAP
+trait AgenteSOAP
 {
     /**
     * L'istanza di Zend\Soap\Server
@@ -22,15 +22,6 @@ abstract class AgenteSOAP
     * Nome del file wsdl, impostato nella classe derivata (senza estensione .wsdl)
     **/
     protected $nomeWsdl = null;
-
-    /**
-     * Costruttore
-     * @param array $opzioniSOAP
-     */
-    public function __construct($opzioniSOAP = null)
-    {
-        $this->opzioniSOAP = $opzioniSOAP;
-    }
 
     /**
      * Imposta il percorso ai file wsdl e xsd dalla root del sito nel caso in cui non si utilizzino quelli forniti dalla libreria alll'interno della cartella wsdl

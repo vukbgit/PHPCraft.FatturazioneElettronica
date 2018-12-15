@@ -116,4 +116,37 @@ Per ogni webservice che si vuole esporre è necessario utilizzare una classe che
     //la classe del client espone i metodi con i nomi delle operazioni (in questo caso RiceviFatture)
     $return = $client->RiceviFatture($fileSdIConMetadati);
 
+## certificati ##
+
+Panoramica dei documenti crittografici (chiavi, richeiste di certificati, certificati) coinvolti; i blocchi di codice contengono i comandi openssl utilizzati, le frasi in corsivo sono riportate dalla documentazine e dai messaggi forniti dal SdI:
+
+* __chiave privata + pubblica client__: client-private-public.pem
+        openssl genrsa –out client-private-public.pem 2048
+* __chiave pubblica client__: client-public.pem
+    * estratta dalla chiave privata + pubblica con
+            openssl rsa -in client-private-public.pem -out client-public.pem -outform PEM -pubout
+* __CSR client__: client.csr
+        openssl req -new -key client-private-public.pem -out client.csr
+    * _per la CSR client è richiesto che nel "cn" (Common Name) della richiesta sia indicato il Codice Fiscale del Sottoscrittore preceduto da 'SDI-' (SDI-03084840168)_
+* __chiave privata + pubblica server__: server-private-public.pem
+        openssl genrsa –out server-private-public.pem 2048
+* __CSR client__: client.csr
+        openssl req -new -key server-private-public.pem -out server.csr
+    * _per la CSR server si può scegliere se procedere come per la CSR client oppure se inserire all'interno del "cn" l'hostname del server che ospita il servizio_ (inserito hostname).
+* __certificati legati alle CSR__: scaricabili da [https://sdi.fatturapa.gov.it](https://sdi.fatturapa.gov.it) in Strumenti > Gestire il canale > Test interoperabilità > Download File dopo aver inviato via pec RichiestaAccreditamento.zip.p7m (la richiesta firmata digitalmente)
+    * _i certificati necessari per la configurazione SSL dei propri ambienti, in base alle CSR inviate in fase di accreditamento_
+    * __certificato client__: SDI-[codice-fiscale-inserito-nella-CSR-clien].cer
+    * __certificato server__: [valore-del-campo-CN-inserito-nella-CSR-server].cer
+* __Kit di Test__: scaricabile da [https://sdi.fatturapa.gov.it](https://sdi.fatturapa.gov.it) in Strumenti > Gestire il canale > Test interoperabilità > Download File dopo aver inviato via pec RichiestaAccreditamento.zip.p7m (la richiesta firmata digitalmente)
+    * __certificati di CA (Certification Authority)__:
+        * caentrate.cer: certificato di CA per ambiente di __produzione__
+        * CAEntratetest.cer: certificato di CA per validare il certificato SdI di __test__
+    * __CERTIFICATI DI TEST__:
+        * testservizi.fatturapa.it.cer: Certificato SERVER esposto dai servizi di test del Sistema di Interscambio
+        * SistemaInterscambioFatturaPATest.cer: Parte pubblica del certificato CLIENT utilizzato dal Sistema di Interscambio per invocare i servizi di test da voi esposti
+    * __CERTIFICATI DI PRODUZIONE__:
+        * servizi.fatturapa.it.cer: Certificato SERVER esposto dai servizi del Sistema di Interscambio
+        * SistemaInterscambioFatturaPA.cer: Parte pubblica del certificato CLIENT utilizzato dal Sistema di Interscambio per invocare i servizi da voi esposti
+
+
 [Documentazione SdI](https://www.fatturapa.gov.it/export/fatturazione/it/normativa/f-3.htm)

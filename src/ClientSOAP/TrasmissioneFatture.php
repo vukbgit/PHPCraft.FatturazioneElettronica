@@ -14,6 +14,14 @@ class TrasmissioneFatture extends \PHPCraft\FatturazioneElettronica\ClientSOAP
     protected $nomeWsdl = 'TrasmissioneFatture_v1.1';
 
     /**
+    * Location di test e produzione
+    **/
+    protected $locations = [
+        'test' => ' https://fatturazione-elettronica.vuk.bg.it/TrasmissioneFatture',
+        'produzione' => 'https://fatturazione-elettronica.vuk.bg.it/TrasmissioneFatture'
+    ];
+
+    /**
      * Verifica la correttezza degli argomenti passati con la chiamata all'operazione
      * @param string $operazione
      * @param array $argomenti
