@@ -123,15 +123,16 @@ Panoramica dei documenti crittografici (chiavi, richieste di certificati, certif
 * __chiave privata + pubblica client__: client-private-public.pem
     * `openssl genrsa –out client-private-public.pem 2048`
 * __chiave pubblica client__: client-public.pem
-    * estratta dalla chiave privata + pubblica con
-            openssl rsa -in client-private-public.pem -out client-public.pem -outform PEM -pubout
+    * estratta dalla chiave privata + pubblica con:
+
+    `openssl rsa -in client-private-public.pem -out client-public.pem -outform PEM -pubout`
 * __CSR client__: client.csr
-        openssl req -new -key client-private-public.pem -out client.csr
+    * `openssl req -new -key client-private-public.pem -out client.csr`
     * _per la CSR client è richiesto che nel "cn" (Common Name) della richiesta sia indicato il Codice Fiscale del Sottoscrittore preceduto da 'SDI-' (SDI-03084840168)_
 * __chiave privata + pubblica server__: server-private-public.pem
-        openssl genrsa –out server-private-public.pem 2048
+    * `openssl genrsa –out server-private-public.pem 2048`
 * __CSR client__: client.csr
-        openssl req -new -key server-private-public.pem -out server.csr
+    * `openssl req -new -key server-private-public.pem -out server.csr`
     * _per la CSR server si può scegliere se procedere come per la CSR client oppure se inserire all'interno del "cn" l'hostname del server che ospita il servizio_ (inserito hostname).
 * __certificati legati alle CSR__: scaricabili da [https://sdi.fatturapa.gov.it](https://sdi.fatturapa.gov.it) in Strumenti > Gestire il canale > Test interoperabilità > Download File dopo aver inviato via pec RichiestaAccreditamento.zip.p7m (la richiesta firmata digitalmente)
     * _i certificati necessari per la configurazione SSL dei propri ambienti, in base alle CSR inviate in fase di accreditamento_
