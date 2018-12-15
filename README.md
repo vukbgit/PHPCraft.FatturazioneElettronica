@@ -118,10 +118,10 @@ Per ogni webservice che si vuole esporre è necessario utilizzare una classe che
 
 ## certificati ##
 
-Panoramica dei documenti crittografici (chiavi, richeiste di certificati, certificati) coinvolti; i blocchi di codice contengono i comandi openssl utilizzati, le frasi in corsivo sono riportate dalla documentazine e dai messaggi forniti dal SdI:
+Panoramica dei documenti crittografici (chiavi, richieste di certificati, certificati) coinvolti; i blocchi di codice contengono i comandi openssl utilizzati, le frasi in corsivo sono riportate dalla documentazine e dai messaggi forniti dal SdI:
 
 * __chiave privata + pubblica client__: client-private-public.pem
-        openssl genrsa –out client-private-public.pem 2048
+    * `openssl genrsa –out client-private-public.pem 2048`
 * __chiave pubblica client__: client-public.pem
     * estratta dalla chiave privata + pubblica con
             openssl rsa -in client-private-public.pem -out client-public.pem -outform PEM -pubout
